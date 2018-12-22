@@ -44,7 +44,7 @@ function generateCells (size) {
         cell = {
                row: i,
                col: j,
-               isMine: false,
+               isMine: mineRandom(),
                isMarked: false,
                hidden: true,
         }
@@ -56,9 +56,18 @@ function generateCells (size) {
   return cells
 }
 
+function mineRandom () {
+  cellChance = Math.round(Math.random() * 99);
+  if (cellChance < 20) {
+    return true
+  } else {
+    return false
+  }
+}
+
 function startGame () {
   // Don't remove this function call: it makes the game work!
-board.cells[4].isMine = true
+// board.cells[4].isMine = true
 
 for (i = 0; i < board.cells.length; i++) {
   board.cells[i].surroundingMines = countSurroundingMines(board.cells[i])
@@ -74,8 +83,7 @@ for (i = 0; i < board.cells.length; i++) {
 // 2. Are all of the mines marked?
 document.addEventListener("click", checkForWin);
 document.addEventListener("contextmenu", checkForWin);
-document.addEventListener("click", nonMinesCount);
-document.addEventListener("click", nonMinesVisible);
+
 
 function checkForWin (){
   for (var i = 0; i < board.cells.length; i++){
