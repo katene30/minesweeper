@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', startGame)
-
 // Define your `board` object here!
 var board = {
-   cells: generateCells(5)
+   cells: generateCells(6)
  }
 //     {
 //       row: 0,
@@ -46,6 +45,7 @@ function generateCells (size) {
                row: i,
                col: j,
                isMine: false,
+               isMarked: false,
                hidden: true,
         }
 
@@ -72,29 +72,127 @@ for (i = 0; i < board.cells.length; i++) {
 //
 // 1. Are all of the cells that are NOT mines visible?
 // 2. Are all of the mines marked?
+document.addEventListener("click", checkForWin);
+document.addEventListener("contextmenu", checkForWin);
+document.addEventListener("click", nonMinesCount);
+document.addEventListener("click", nonMinesVisible);
 
+function checkForWin (){
+  for (var i = 0; i < board.cells.length; i++){
+    var check = board.cells[i];
+    if(!check.isMine && check.hidden){
+      return false;
+    } else if (check.isMine && !check.isMarked) {
+      return false;
+    }else if (!check.hasOwnProperty("isMarked"))
+    return false;
+  }
 
-function checkForWin (){}
+     lib.displayMessage('You win!')
+  }
+
+//  else if( countVisibleNonMines = !visibleNonMines ) {
+//      console.log(" Try Again ")
+//      }
+
+//    }
+
 //
 //
 //   // Once [ c ] is equal to visibleNonMines the user wins.
 //   // Create an if statement for if they are equal console log this, if this is not true console.log try again.
 //
 //
-//   if (countVisibleNonMines = visibleNonMines ) {
-//     	 console.log (lib.displayMessage('You win!’))
-//     	 }
-//
-//   if else ( countVisibleNonMines = !visibleNonMines ) {
-//     	console.log(“ Try Again ”)
-//     	}
-//
-//     }
+  // if (countVisibleNonMines = visibleNonMines ) {
+  //   	 console.log (lib.displayMessage('You win!’))
+  //   	 }
+
+  // if else ( countVisibleNonMines = !visibleNonMines ) {
+  //   	console.log(“ Try Again ”)
+  //   	}
+
+  //   }
 //
 //
 //   // Count through the array and count all of the mines and mark it [ a ]
 //   // Then, [ a ] Mines - all cells on the board  = visibleNonMines
-//
+
+
+// if nonMinesCount = nonMinesVisible then you win
+// how many aren't mines
+function nonMinesCount (cell) {
+  var mine = 0
+  for (i = 0; i < board.cells.length; i++) {
+    if (board.cells[i].isMine === true) {
+      mine++
+    }
+  }
+  console.log(board.cells.length - mine)
+  return board.cells.length - mine
+}
+//  how many non mines are showing
+function nonMinesVisible (cell) {
+  var count = 0
+  for (i = 0; i < board.cells.length; i++) {
+    if (board.cells[i].isMine === false && board.cells[i].hidden === false) {
+      count ++
+    }
+  }
+  console.log(count)
+  return count
+}
+
+
+
+
+function mineMarked (cell) {
+  var count = 0
+  for (i = 0; i < board.cells.length; i++) {
+    if(board.cells[i].isMine === true && board.cells[i].isMarked === true) {
+      count ++
+    } 
+  }
+  return count
+}
+
+function cellsShown (cell) {
+  for (i = 0; i < board.cells.length; i++) {
+    if (board.cells[i].hidden === true) {
+      return false
+    } else {
+      return true
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function visibleNonMines (cell) {
+//   var mine = 0
+
+//   for (a=0; a < board.cells.length; a++) {
+//     if (cell[a].isMine){
+//       mine ++
+//     }
+//   }
+//   return mine - cells
+// }
 // Function visibleNonMines (cell) {
 //
 // Var mine = 0
@@ -111,9 +209,17 @@ function checkForWin (){}
 //
 //
 //
-// // Count through the array again and count all the cells that are not mines and mark it [ b]
-// // Then count through all the nonMines [ b ] and for every one that has the value hidden = false increase a number called [ c ].
-//
+// Count through the array again and count all the cells that are not mines and mark it [ b]
+// Then count through all the nonMines [ b ] and for every one that has the value hidden = false increase a number called [ c ].
+function countVisibleNonMines (cell) {
+  var count = 0
+  for (b = 0; b < board.cells.length; b++) {
+    if (board.cells.hidden === false) {
+      count++
+    }
+  }
+  return count
+}
 //
 //
 // Function countVisibleNonMines (cell) {
@@ -137,6 +243,7 @@ function countSurroundingMines (cell) {
 // loop through all the surrounding cells, and if they are a mine, add to the count.
 // return the counts
 //
+
 var surrounding = lib.getSurroundingCells(cell.row, cell.col)
 var count = 0
 
